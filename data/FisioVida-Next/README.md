@@ -1,39 +1,74 @@
-# FisioVida — Frontend Next.js
+# FisioVida — Front-end
 
-Migração do protótipo original em HTML/CSS/JavaScript puro para Next.js + React + TypeScript.
+Painel administrativo da clínica FisioVida, desenvolvido com Next.js 15, React 19 e TypeScript.
 
-## O que foi preservado
+## Requisitos
 
-- Mesma identidade visual, cores, tipografia, espaçamentos e componentes do HTML original.
-- Login e retorno ao login.
-- Mostrar/ocultar senha.
-- Navegação entre Dashboard, Agenda, Pacientes, paciente, Consultas, Tipos de consulta, Horários, Clínica e Configurações.
-- Menu lateral responsivo.
-- Abas de configurações.
-- Switches de preferências.
-- Conteúdo e dados demonstrativos existentes no protótipo.
+- Node.js 18 ou superior
+- pnpm
+- Backend FisioVida-1 disponível em `http://localhost:8080/api`
 
-## Arquitetura preparada para o backend
+## Instalação
 
-O frontend está separado do backend e já possui `lib/api.ts` para consumir a API Java/Spring Boot através de `NEXT_PUBLIC_API_URL`.
-
-Fluxo planejado:
-
-Next.js / React / TypeScript
-→ API REST
-→ Java 21 + Spring Boot
-→ PostgreSQL / Supabase
-
-## Rodar
+Na pasta `data/FisioVida-Next`:
 
 ```bash
-npm install
-npm run dev
+pnpm install
 ```
 
-Depois abra `http://localhost:3000`.
+## Desenvolvimento
 
-## Observação
+```bash
+pnpm dev
+```
 
-O backend Java ainda não foi conectado porque ele não faz parte do arquivo HTML enviado. Portanto, esta versão mantém as funcionalidades que já existiam no protótipo e deixa a integração REST preparada sem inventar endpoints.
-Teste de sincronização
+Abra `http://localhost:3000` no navegador.
+
+## Build de produção
+
+```bash
+pnpm run build
+pnpm start
+```
+
+## Variáveis de ambiente
+
+Copie `.env.example` para `.env.local` e ajuste o destino do backend, se necessário:
+
+```env
+API_URL=http://localhost:8080
+NEXT_PUBLIC_API_URL=/api
+```
+
+O Next.js encaminha chamadas do navegador em `/api/*` para `${API_URL}/api/*` usando rewrites same-origin.
+
+## Estrutura
+
+```text
+app/
+  (public)/login/          Tela de login
+  (protected)/             Páginas autenticadas e layout
+    dashboard/             Painel inicial
+    usuarios/              Gestão de usuários (ADMIN)
+    agenda/                 Placeholder
+    pacientes/               Placeholder
+    configuracoes/           Placeholder
+  providers.tsx             Providers globais
+  not-found.tsx              Página 404
+components/                  Layout, loading e notificações
+context/                     AuthContext e ToastContext
+lib/                         Cliente de API, erros e utilitários
+```
+
+## Autenticação
+
+- O access token JWT fica somente em memória no AuthContext.
+- O refresh token é um cookie HttpOnly gerenciado pelo backend.
+- Chamadas autenticadas renovam a sessão ao receber 401.
+- O backend oficial fica em `C:\Users\Giovani\Desktop\Fisioterapia-1` e precisa estar disponível em `localhost:8080`.
+
+Para iniciar o backend, suba o PostgreSQL pelo Docker Compose e execute o Maven Wrapper na pasta do backend.
+
+## Funcionalidades clínicas pendentes
+
+Pacientes, agenda, sessões e histórico dependem de rotas correspondentes no backend. As páginas atuais são placeholders e não fazem chamadas para endpoints inexistentes.

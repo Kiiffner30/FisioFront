@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "clean": "powershell -NoProfile -Command \"Remove-Item -Recurse -Force .next, node_modules/.cache -ErrorAction SilentlyContinue\"",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
